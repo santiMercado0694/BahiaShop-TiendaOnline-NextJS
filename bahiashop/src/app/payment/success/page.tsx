@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import {useSession} from "next-auth/react";
+import {getCookie, setCookie} from "@/lib/cookies";
 
 export default function PaymentSuccess() {
   const { data: session } = useSession();
@@ -15,17 +16,33 @@ export default function PaymentSuccess() {
   const { cart, updateProductStock, clearCartByUserId } = useGlobalContext();
 
   const [cacheCart, setCacheCart] = useState<Cart[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (cacheCart.length < 1) setCacheCart(cart);
-
-    cacheCart.map((prod) => {
-      updateProductStock(prod.name, prod.stock - prod.quantity);
+    
+    getCookie('paymentsent').then(result => {
+      
+      if(!result || result != 'true') {
+        router.push('/');
+        return;
+      }
+      
+      setLoading(false);
+      
+      if(cacheCart.length < 1)
+        setCacheCart(cart);
+      
+      cacheCart.map((prod) => {
+        updateProductStock(prod.name, prod.stock - prod.quantity);
+      })
+      
+      if (!session) return;
+      clearCartByUserId(session.user.user_id);
+      setCookie('paymentsent', '');
+      
     });
-
-    if (!session) return;
-    clearCartByUserId(session.user.user_id);
-  }, [session, cacheCart, cart]);
+    
+  }, [session, cacheCart, cart, loading]);
 
   useEffect(() => {
     const redirectTimer = setTimeout(() => {
@@ -34,6 +51,14 @@ export default function PaymentSuccess() {
 
     return () => clearTimeout(redirectTimer);
   }, [router]);
+  
+  if (loading) {
+    return (
+      <MaxWidthWrapper className="flex flex-col items-center justify-center h-screen">
+        <h1>Cargando...</h1>
+      </MaxWidthWrapper>
+    );
+  }
 
   return (
     <MaxWidthWrapper className="flex flex-col items-center justify-center h-screen">

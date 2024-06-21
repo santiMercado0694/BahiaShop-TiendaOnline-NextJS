@@ -4,8 +4,9 @@ import React from "react";
 import { useGlobalContext } from "@/context/StoreProvider";
 import { usePaymentContext } from "@/context/MPProvider";
 import Box from "@mui/material/Box";
-import { initMercadoPago } from "@mercadopago/sdk-react";
-import Image from "next/image";
+import { initMercadoPago } from '@mercadopago/sdk-react';
+import Image from 'next/image';
+import {setCookie} from "@/lib/cookies";
 
 interface MPButtonProps {
   handleSubmit: () => boolean;
@@ -40,6 +41,7 @@ export default function MPButton({ handleSubmit }: MPButtonProps) {
     e.preventDefault();
 
     if (handleSubmit()) {
+      setCookie('paymentsent', 'true');
       window.location.href = paymentUrl;
     } else {
       console.error(

@@ -1,7 +1,39 @@
+"use client";
+
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
 import Link from "next/link";
+import {useEffect, useState} from "react";
+import { useRouter } from "next/navigation";
+import {getCookie, setCookie} from "@/lib/cookies";
 
 export default function PaymentPending() {
+  
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(true);
+  
+  useEffect(() => {
+    
+    getCookie('paymentsent').then(result => {
+      
+      if (!result || result != 'true') {
+        router.push('/');
+        return;
+      }
+      
+      setCookie('paymentsent', '');
+      setLoading(false);
+    });
+  }, [loading]);
+  
+  
+  if (loading) {
+    return (
+      <MaxWidthWrapper className="flex flex-col items-center justify-center h-screen">
+        <h1>Cargando...</h1>
+      </MaxWidthWrapper>
+    );
+  }
+  
   return (
     <MaxWidthWrapper className="flex flex-col items-center justify-center h-screen">
       <div className="bg-yellow-400 text-white rounded-lg p-14 shadow-lg">
