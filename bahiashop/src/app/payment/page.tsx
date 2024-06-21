@@ -20,6 +20,8 @@ const Payment = () => {
   const [lastName, setLastName] = useState("");
   const [address, setAddress] = useState("");
   const [province, setProvince] = useState("");
+  
+  const [loading, setLoading] = useState(true);
 
   const [errors, setErrors] = useState({
     email: false,
@@ -88,6 +90,7 @@ const Payment = () => {
         if (!session || cart.length < 1) {
           router.push("/");
         } else {
+          setLoading(false)
           setFirstName(session.user.nombre ?? "");
           setLastName(session.user.apellido ?? "");
           setEmail(session.user.email ?? "");
@@ -96,6 +99,14 @@ const Payment = () => {
     
       return () => clearTimeout(timer);
     }, [session, cart.length, router]);
+    
+  if (loading) {
+    return (
+      <MaxWidthWrapper>
+        <h1> Cargando... </h1>
+      </MaxWidthWrapper>
+    );
+  };
 
   return (
     <MPProvider>
