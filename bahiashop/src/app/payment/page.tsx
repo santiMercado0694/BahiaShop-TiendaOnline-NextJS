@@ -8,6 +8,7 @@ import { useGlobalContext } from "@/context/StoreProvider";
 import { CldImage } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Loader from "react-loader-spinner";
 
 const Payment = () => {
   const { cart } = useGlobalContext();
@@ -103,7 +104,15 @@ const Payment = () => {
   if (loading) {
     return (
       <MaxWidthWrapper>
-        <h1> Cargando... </h1>
+        <div className="flex justify-center items-center h-screen">
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={1000}
+          />
+        </div>
       </MaxWidthWrapper>
     );
   };

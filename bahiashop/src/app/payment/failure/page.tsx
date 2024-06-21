@@ -5,6 +5,7 @@ import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {getCookie, setCookie} from "@/lib/cookies";
+import Loader from "react-loader-spinner";
 
 export default function PaymentFailure() {
   
@@ -30,7 +31,15 @@ export default function PaymentFailure() {
   if (loading) {
     return (
       <MaxWidthWrapper className="flex flex-col items-center justify-center h-screen">
-        <h1>Cargando...</h1>
+        <div className="flex justify-center items-center h-screen">
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={1000}
+          />
+        </div>
       </MaxWidthWrapper>
     );
   }

@@ -1,6 +1,5 @@
 "use client";
 
-import Cart from "@/components/cart/Cart";
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
 import { ProductCard } from "@/components/product/ProductCard";
 import { useGlobalContext } from "@/context/StoreProvider";
