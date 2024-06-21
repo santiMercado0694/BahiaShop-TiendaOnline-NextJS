@@ -60,7 +60,7 @@ interface AppContextProps {
     product_id: string,
     quantity: number
   ) => Promise<void>;
-  updateProductStock: (id: string, stock: number) => Promise<void>;
+  updateProductStock: (name: string, stock: number) => Promise<void>;
   createProduct: (product: Omit<Product, "id">) => Promise<void>;
   updateProduct: (id: string, product: Omit<Product, "id">) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
@@ -227,9 +227,9 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateProductStock = async (id: string, stock: number) => {
+  const updateProductStock = async (name: string, stock: number) => {
     try {
-      const data = { id, stock };
+      const data = { name, stock };
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/products/stock`,
         {

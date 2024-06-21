@@ -1,12 +1,9 @@
 "use client";
 
-import Cart from "@/components/cart/Cart";
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
-import { ProductCard } from "@/components/product/ProductCard";
-import { useGlobalContext } from "@/context/StoreProvider";
+import {Cart, useGlobalContext} from "@/context/StoreProvider";
 import {useEffect, useState} from "react";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
@@ -14,29 +11,25 @@ import {useSession} from "next-auth/react";
 export default function PaymentSuccess() {
   
   const { data: session } = useSession();
-  const { cart, getProductStock, updateProductStock, clearCartByUserId } = useGlobalContext();
+  const { cart, updateProductStock, clearCartByUserId } = useGlobalContext();
   
-  const [stockUpdated, setStockUpdated] = useState<boolean>(false);
+  const [cacheCart, setCacheCart] = useState<Cart[]>([]);
 
   useEffect(() => {
     
-    if (stockUpdated) return;
+    if(cacheCart.length < 1)
+      setCacheCart(cart);
     
-    if (!session) return;
-    
-    cart.forEach(async (prod) => {
-      const stock = await getProductStock(prod.cart_item_id);
-      if (!stock) return;
-      
-      const newValue = stock - prod.quantity;
-      await updateProductStock(prod.cart_item_id, newValue);
-      
+    cacheCart.map((prod) => {
+      updateProductStock(prod.name, prod.stock - prod.quantity);
     })
     
+    if (!session) return;
     clearCartByUserId(session.user.user_id);
-    setStockUpdated(true);
     
-  }, [session]);
+    
+  }, [session, cacheCart, cart]);
+  
 
   return (
     <MaxWidthWrapper className="flex flex-col">
