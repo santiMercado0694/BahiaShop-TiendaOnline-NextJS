@@ -1,23 +1,26 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useGlobalContext} from "@/context/StoreProvider";
 import {usePaymentContext} from "@/context/MPProvider";
 import Box from "@mui/material/Box";
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import { initMercadoPago } from '@mercadopago/sdk-react'
+import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
+import {toast} from "react-toastify";
 
 
 export default function MPButton() {
   
-  const {cart} = useGlobalContext();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const {cart, clearCartByUserId} = useGlobalContext();
   const {getPreferenceId} = usePaymentContext();
-  const [prefRequest, setPrefRequest] = useState<boolean>(false);
   
-  
-  const [preferenceId, setPreferenceId] = useState(null);
+  const [paymentUrl, setPaymentUrl] = useState(null);
   
   
   useEffect(() => {
     
-    if(prefRequest) return;
+    if(paymentUrl) return;
     
     if (cart.length < 1) return;
     
@@ -33,19 +36,34 @@ export default function MPButton() {
     
     
     getPreferenceId(items).then((result : any) => {
-      setPreferenceId(result.id);
+      setPaymentUrl(result.init_point);
     });
-    setPrefRequest(true)
   }, [cart]);
+  
+  function goHome() {
+    if(!session) return;
+    clearCartByUserId(session.user.user_id).then(() => {
+      
+      toast.success(`¡Gracias por comprar en nuestra tienda!`, {
+        position: "top-right",
+        style: {
+          width: "300px",
+          fontSize: "1rem",
+        },
+      });
+      
+      router.push('/');
+      router.refresh();
+    })
+    
+  }
   
   
   return (
-    // <Box component="form" noValidate  id={FORM_ID} method="GET" />
     <Box id="wallet_container">
-      { preferenceId ?
+      { paymentUrl ?
         
-        <Wallet initialization={{ preferenceId: preferenceId }} />
-        // <a href={payURL??'#'}> Ir a pagar </a>
+        <a role="button" className="btn btn-primary align-middle"  href={paymentUrl} onClick={goHome} > Ir a pagar </a>
         
         :
         
