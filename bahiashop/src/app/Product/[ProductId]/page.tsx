@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
+import NotFound from "@/app/not-found";
 
 const Producto = () => {
   const { getProductById, loading, addProductCart } = useGlobalContext();
@@ -63,7 +64,7 @@ const Producto = () => {
           <ToastContainer />
         </div>
       ) : (
-        <div> </div>
+        <NotFound />
       )}
     </MaxWidthWrapper>
   );
