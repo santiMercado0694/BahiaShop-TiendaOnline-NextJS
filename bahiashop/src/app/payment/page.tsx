@@ -83,15 +83,19 @@ const payment = () => {
       }
     };
 
-  useEffect(() => {
-    if (!session || cart.length < 1) {
-      router.push("/");
-    } else {
-      setFirstName(session.user.nombre ?? "");
-      setLastName(session.user.apellido ?? "");
-      setEmail(session.user.email ?? "");
-    }
-  }, [session, cart.length, router]);
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        if (!session || cart.length < 1) {
+          router.push("/");
+        } else {
+          setFirstName(session.user.nombre ?? "");
+          setLastName(session.user.apellido ?? "");
+          setEmail(session.user.email ?? "");
+        }
+      }, 1000); 
+    
+      return () => clearTimeout(timer);
+    }, [session, cart.length, router]);
 
   return (
     <MPProvider>
