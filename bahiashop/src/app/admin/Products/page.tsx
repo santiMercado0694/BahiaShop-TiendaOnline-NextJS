@@ -7,7 +7,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/lib/utils";
@@ -248,6 +248,7 @@ const AdminProductPanel = () => {
 
   return (
     <MaxWidthWrapper>
+      <ToastContainer />
       <section className="dark:bg-gray-900 p-4 sm:p-5 antialiased">
         <div className="mx-auto max-w-screen-2xl px-4 lg:px-12">
           <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">

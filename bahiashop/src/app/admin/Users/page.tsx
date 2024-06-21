@@ -7,7 +7,7 @@ import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle, HiSearch } from "react-icons/hi";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/lib/utils";
@@ -99,6 +99,7 @@ const AdminUserPanel = () => {
 
   return (
     <MaxWidthWrapper>
+      <ToastContainer />
       <section className="dark:bg-gray-900 p-4 sm:p-5 antialiased">
         <div className="flex flex-col md:flex-row items-stretch md:items-center md:space-x-3 space-y-3 md:space-y-0 justify-between mx-4 py-4 border-t dark:border-gray-700">
           <div className="w-full md:w-1/2 relative">
