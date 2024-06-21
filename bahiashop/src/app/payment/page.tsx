@@ -9,7 +9,7 @@ import { CldImage } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const Payment = () => {
+const payment = () => {
   const { cart } = useGlobalContext();
   const { data: session } = useSession();
   const router = useRouter();
@@ -84,12 +84,14 @@ const Payment = () => {
     };
 
   useEffect(() => {
-    if (session) {
+    if (!session || cart.length < 1) {
+      router.push("/");
+    } else {
       setFirstName(session.user.nombre ?? "");
       setLastName(session.user.apellido ?? "");
       setEmail(session.user.email ?? "");
     }
-  }, [session]);
+  }, [session, cart.length, router]);
 
   return (
     <MPProvider>
@@ -311,4 +313,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default payment;
