@@ -65,19 +65,31 @@ export function ProductCard() {
   ) => {
     event.stopPropagation();
     if (session && session.user && session.user.user_id) {
-      addProductCart(session.user.user_id, id_producto, 1);
-      toast.success(`Se agregó ${producto_name} al carrito`, {
-        position: "top-right",
-        style: {
-          width: "300px",
-          fontSize: "1rem",
-        },
-      });
-      console.log("Agregando producto al carrito");
+      const existingCartItem = cart.find((item) => item.name === producto_name);
+      if (existingCartItem) {
+        toast.warn(`El producto ${producto_name} ya está en el carrito.`, {
+          position: "top-right",
+          style: {
+            width: "300px",
+            fontSize: "1rem",
+          },
+        });
+      } else {
+        addProductCart(session.user.user_id, id_producto, 1);
+        toast.success(`Se agregó ${producto_name} al carrito`, {
+          position: "top-right",
+          style: {
+            width: "300px",
+            fontSize: "1rem",
+          },
+        });
+        console.log("Agregando producto al carrito");
+      }
     } else {
       router.push("/SignIn");
     }
   };
+  
 
   const handleBuyNow = (
     event: React.MouseEvent<HTMLButtonElement>,
