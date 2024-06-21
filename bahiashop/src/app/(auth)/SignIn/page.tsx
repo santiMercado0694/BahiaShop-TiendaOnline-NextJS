@@ -14,12 +14,15 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const defaultTheme = createTheme();
 const backgroundImage = "/Signin.webp";
 
 export default function SignInSide() {
   const router = useRouter();
+  const { data: session } = useSession();
+
   const [formErrors, setFormErrors] = React.useState({
     email: "",
     password: "",
@@ -80,6 +83,13 @@ export default function SignInSide() {
       setFormErrors(newErrors);
     }
   };
+
+  React.useEffect(() => {
+    if (session) {
+      router.push("/");
+      router.refresh();
+    }
+  }, [session, router]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

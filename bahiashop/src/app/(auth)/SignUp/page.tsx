@@ -14,9 +14,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useGlobalContext } from "@/context/StoreProvider";
+import { useSession } from "next-auth/react";
+
 
 function SignUp() {
   const router = useRouter();
+  const { data: session } = useSession();
   const { addUser } = useGlobalContext();
   const [formData, setFormData] = useState({
     nombre: "",
@@ -86,6 +89,13 @@ function SignUp() {
       setFormErrors(newErrors);
     }
   };
+
+  React.useEffect(() => {
+    if (session) {
+      router.push("/");
+      router.refresh();
+    }
+  }, [session, router]);
 
   return (
     <ThemeProvider theme={createTheme()}>
