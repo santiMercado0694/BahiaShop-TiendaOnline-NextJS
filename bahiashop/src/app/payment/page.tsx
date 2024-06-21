@@ -142,7 +142,7 @@ const Payment = () => {
                       Cantidad: {item.quantity}
                     </span>
                     <p className="text-lg font-bold">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ${(item.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -310,7 +310,7 @@ const Payment = () => {
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">Subtotal</p>
                   <p className="font-semibold text-gray-900">
-                    ${subtotal.toFixed(2)}
+                    ${subtotal.toLocaleString()}
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
@@ -323,7 +323,7 @@ const Payment = () => {
               <div className="mt-6 flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">Total</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  ${total.toFixed(2)}
+                  ${total.toLocaleString()}
                 </p>
               </div>
             </div>
