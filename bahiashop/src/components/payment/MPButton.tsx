@@ -1,75 +1,75 @@
-import React, {useEffect, useState} from 'react';
-import {useGlobalContext} from "@/context/StoreProvider";
-import {usePaymentContext} from "@/context/MPProvider";
+"use client";
+
+import React from 'react';
+import { useGlobalContext } from "@/context/StoreProvider";
+import { usePaymentContext } from "@/context/MPProvider";
 import Box from "@mui/material/Box";
-import { initMercadoPago } from '@mercadopago/sdk-react'
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
-import {toast} from "react-toastify";
+import { initMercadoPago } from '@mercadopago/sdk-react';
+import Image from 'next/image'; 
 
+interface MPButtonProps {
+  handleSubmit: () => boolean; 
+}
 
-export default function MPButton() {
+export default function MPButton({ handleSubmit }: MPButtonProps) {
+  const { cart } = useGlobalContext();
+  const { getPreferenceId } = usePaymentContext();
+
+  const [paymentUrl, setPaymentUrl] = React.useState<string>("");
   
-  const router = useRouter();
-  const { data: session } = useSession();
-  const {cart, clearCartByUserId} = useGlobalContext();
-  const {getPreferenceId} = usePaymentContext();
-  
-  const [paymentUrl, setPaymentUrl] = useState(null);
-  
-  
-  useEffect(() => {
-    
-    if(paymentUrl) return;
-    
+
+  React.useEffect(() => {
     if (cart.length < 1) return;
-    
-    initMercadoPago(`${process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY}`)
-    
-    let items : any[] = [];
-    
-    cart.map(it => items.push({
-      title: it.name,
-      quantity: it.quantity,
-      unit_price: it.price
-    }))
-    
-    
-    getPreferenceId(items).then((result : any) => {
-      setPaymentUrl(result.init_point);
-    });
-  }, [cart]);
-  
-  function goHome() {
-    if(!session) return;
-    clearCartByUserId(session.user.user_id).then(() => {
-      
-      toast.success(`¡Gracias por comprar en nuestra tienda!`, {
-        position: "top-right",
-        style: {
-          width: "300px",
-          fontSize: "1rem",
-        },
+    if (!paymentUrl || paymentUrl.trim() === "") {
+
+      initMercadoPago(`${process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY}`);
+      const items: any[] = [];
+      cart.forEach((it) =>
+        items.push({
+          title: it.name,
+          quantity: it.quantity,
+          unit_price: it.price,
+        })
+      );
+
+      getPreferenceId(items).then((result) => {
+        setPaymentUrl(result.init_point!); 
       });
-      
-      router.push('/');
-      router.refresh();
-    })
-    
-  }
-  
-  
+    }
+  }, [cart, paymentUrl]);
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+
+    if (handleSubmit()) { 
+      window.location.href = paymentUrl;
+    } else {
+      console.error("Por favor, complete todos los campos antes de proceder al pago.");
+    }
+  };
+
   return (
-    <Box id="wallet_container">
-      { paymentUrl ?
-        
-        <a role="button" className="btn btn-primary align-middle"  href={paymentUrl} onClick={goHome} > Ir a pagar </a>
-        
-        :
-        
-        <p> Cargando... </p>
-        
-      }
+    <Box id="wallet_container" className="mt-4 mb-8 w-full flex justify-center">
+      {paymentUrl ? (
+        <a
+          role="button"
+          id="mp_button"
+          href={paymentUrl}
+          onClick={handleClick}
+          className="inline-block"
+        >
+          <Image
+            src="/MercadoPago.webp"
+            alt="Pagar con MercadoPago"
+            width={300}
+            height={200}
+            className="hover:opacity-80 transition-opacity duration-300"
+          />
+        </a>
+      ) : (
+        <p className="text-center text-gray-500">Cargando...</p>
+      )}
     </Box>
   );
 }
+

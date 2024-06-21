@@ -59,12 +59,10 @@ const Navbar = () => {
                                         >
                                             CERRAR SESIÓN
                                         </button>
-                                        {pathname !== '/Payment' && (
                                             <div className="ml-4 flow-root lg:ml-6">
                                                 <Cart />
                                                 <ToastContainer />
-                                            </div>
-                                        )}
+                                            </div>                            
                                     </>
                                 ) : (
                                     <>
