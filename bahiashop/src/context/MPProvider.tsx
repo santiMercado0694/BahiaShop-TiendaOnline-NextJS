@@ -22,9 +22,9 @@ const MPProvider = ({children} : {children: ReactNode }) => {
           body: JSON.stringify({
             items: items,
             back_urls: {
-              success: `${process.env.NEXT_PUBLIC_PAGE_URL}`,
-              pending: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment`,
-              failure: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment`,
+              success: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment/success`,
+              pending: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment/pending`,
+              failure: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment/failure`,
             }
           }),
         }
