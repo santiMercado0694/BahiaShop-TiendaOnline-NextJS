@@ -39,8 +39,12 @@ export default function PaymentSuccess() {
       
       if (!session) return;
       clearCartByUserId(session.user.user_id);
-      setCookie('paymentsent', '');
       
+      const cookieTimer = setTimeout(() => {
+        setCookie('paymentsent', '');
+      }, 5000);
+      
+      return () => clearTimeout(cookieTimer);
     });
     
   }, [session, cacheCart, cart, loading]);
