@@ -9,7 +9,7 @@ import { CldImage } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-const payment = () => {
+const Payment = () => {
   const { cart } = useGlobalContext();
   const { data: session } = useSession();
   const router = useRouter();
@@ -317,4 +317,4 @@ const payment = () => {
   );
 };
 
-export default payment;
+export default Payment;
