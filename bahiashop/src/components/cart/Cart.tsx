@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Separator } from "../ui/separator";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { buttonVariants } from "../ui/button";
 import Image from "next/image";
 import { Cart, useGlobalContext } from "@/context/StoreProvider";

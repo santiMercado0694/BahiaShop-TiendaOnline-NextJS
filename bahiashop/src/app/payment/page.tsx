@@ -1,12 +1,12 @@
 "use client";
 
-import React, { ChangeEvent, useState, useEffect  } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
 import MPButton from "@/components/payment/MPButton";
 import { MPProvider } from "@/context/MPProvider";
 import { useGlobalContext } from "@/context/StoreProvider";
 import { CldImage } from "next-cloudinary";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 const Payment = () => {
@@ -83,13 +83,13 @@ const Payment = () => {
       }
     };
 
-    useEffect(() => {
-        if (session) {
-          setFirstName(session.user.nombre ?? ""); 
-          setLastName(session.user.apellido ?? ""); 
-          setEmail(session.user.email ?? ""); 
-        }
-      }, [session]);
+  useEffect(() => {
+    if (session) {
+      setFirstName(session.user.nombre ?? "");
+      setLastName(session.user.apellido ?? "");
+      setEmail(session.user.email ?? "");
+    }
+  }, [session]);
 
   return (
     <MPProvider>
@@ -143,7 +143,6 @@ const Payment = () => {
           <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
             <p className="text-xl font-medium">Detalles de compra</p>
             <div className="">
-              
               <label
                 htmlFor="first-name"
                 className="mt-4 mb-2 block text-sm font-medium"

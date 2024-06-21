@@ -1,86 +1,86 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useGlobalContext } from '@/context/StoreProvider';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useGlobalContext } from "@/context/StoreProvider";
 
 function SignUp() {
   const router = useRouter();
   const { addUser } = useGlobalContext();
   const [formData, setFormData] = useState({
-    nombre: '',
-    apellido: '',
-    email: '',
-    contraseña: '',
+    nombre: "",
+    apellido: "",
+    email: "",
+    contraseña: "",
   });
   const [formErrors, setFormErrors] = useState({
-    nombre: '',
-    apellido: '',
-    email: '',
-    contraseña: '',
+    nombre: "",
+    apellido: "",
+    email: "",
+    contraseña: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setFormErrors((prev) => ({ ...prev, [name]: '' }));
+    setFormErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     let valid = true;
     const newErrors = { ...formErrors };
-  
+
     // Validación de campos
     if (!formData.nombre.trim()) {
-      newErrors.nombre = 'Por favor, ingrese su nombre.';
+      newErrors.nombre = "Por favor, ingrese su nombre.";
       valid = false;
     }
     if (!formData.apellido.trim()) {
-      newErrors.apellido = 'Por favor, ingrese su apellido.';
+      newErrors.apellido = "Por favor, ingrese su apellido.";
       valid = false;
     }
     if (!formData.email.trim()) {
-      newErrors.email = 'Por favor, ingrese su correo electrónico.';
+      newErrors.email = "Por favor, ingrese su correo electrónico.";
       valid = false;
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = 'Ingrese un correo electrónico válido.';
+      newErrors.email = "Ingrese un correo electrónico válido.";
       valid = false;
     }
     if (!formData.contraseña.trim()) {
-      newErrors.contraseña = 'Por favor, ingrese su contraseña.';
+      newErrors.contraseña = "Por favor, ingrese su contraseña.";
       valid = false;
     } else if (formData.contraseña.length < 6) {
-      newErrors.contraseña = 'La contraseña debe tener al menos 6 caracteres.';
+      newErrors.contraseña = "La contraseña debe tener al menos 6 caracteres.";
       valid = false;
     }
-  
+
     if (valid) {
       // Agregar la propiedad password al objeto formData
       const userWithPassword = { ...formData, password: formData.contraseña };
-  
+
       try {
         await addUser(userWithPassword); // Usar el objeto actualizado con la propiedad password
         setFormSubmitted(true);
         setTimeout(() => {
-          router.push('/SignIn');
+          router.push("/SignIn");
           router.refresh();
         }, 5000);
       } catch (error) {
-        console.error('Error al registrar el usuario:', error);
-        alert('Error al registrar el usuario');
+        console.error("Error al registrar el usuario:", error);
+        alert("Error al registrar el usuario");
       }
     } else {
       setFormErrors(newErrors);
@@ -94,18 +94,23 @@ function SignUp() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Registrar cuenta
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -189,4 +194,3 @@ function SignUp() {
 }
 
 export default SignUp;
-

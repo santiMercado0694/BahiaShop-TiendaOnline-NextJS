@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface PaginationProps {
   currentPage: number;
@@ -6,7 +6,11 @@ interface PaginationProps {
   onPageChange: (pageNumber: number) => void;
 }
 
-export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
   return (
     <div className="flex justify-center mt-8">
       <nav>
@@ -15,7 +19,11 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
             <li key={number + 1}>
               <button
                 onClick={() => onPageChange(number + 1)}
-                className={`px-4 py-2 border rounded ${currentPage === number + 1 ? 'bg-cyan-700 text-white' : 'bg-white text-gray-700'}`}
+                className={`px-4 py-2 border rounded ${
+                  currentPage === number + 1
+                    ? "bg-cyan-700 text-white"
+                    : "bg-white text-gray-700"
+                }`}
               >
                 {number + 1}
               </button>

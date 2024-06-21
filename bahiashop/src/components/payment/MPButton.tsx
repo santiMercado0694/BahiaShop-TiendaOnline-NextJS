@@ -1,14 +1,14 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 import { useGlobalContext } from "@/context/StoreProvider";
 import { usePaymentContext } from "@/context/MPProvider";
 import Box from "@mui/material/Box";
-import { initMercadoPago } from '@mercadopago/sdk-react';
-import Image from 'next/image'; 
+import { initMercadoPago } from "@mercadopago/sdk-react";
+import Image from "next/image";
 
 interface MPButtonProps {
-  handleSubmit: () => boolean; 
+  handleSubmit: () => boolean;
 }
 
 export default function MPButton({ handleSubmit }: MPButtonProps) {
@@ -16,12 +16,10 @@ export default function MPButton({ handleSubmit }: MPButtonProps) {
   const { getPreferenceId } = usePaymentContext();
 
   const [paymentUrl, setPaymentUrl] = React.useState<string>("");
-  
 
   React.useEffect(() => {
     if (cart.length < 1) return;
     if (!paymentUrl || paymentUrl.trim() === "") {
-
       initMercadoPago(`${process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY}`);
       const items: any[] = [];
       cart.forEach((it) =>
@@ -33,7 +31,7 @@ export default function MPButton({ handleSubmit }: MPButtonProps) {
       );
 
       getPreferenceId(items).then((result) => {
-        setPaymentUrl(result.init_point!); 
+        setPaymentUrl(result.init_point!);
       });
     }
   }, [cart, paymentUrl]);
@@ -41,10 +39,12 @@ export default function MPButton({ handleSubmit }: MPButtonProps) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
 
-    if (handleSubmit()) { 
+    if (handleSubmit()) {
       window.location.href = paymentUrl;
     } else {
-      console.error("Por favor, complete todos los campos antes de proceder al pago.");
+      console.error(
+        "Por favor, complete todos los campos antes de proceder al pago."
+      );
     }
   };
 
@@ -72,4 +72,3 @@ export default function MPButton({ handleSubmit }: MPButtonProps) {
     </Box>
   );
 }
-

@@ -89,7 +89,6 @@ export function ProductCard() {
       router.push("/SignIn");
     }
   };
-  
 
   const handleBuyNow = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -101,11 +100,11 @@ export function ProductCard() {
       const cartItem = cart.find((item) => item.name === producto_name);
 
       if (cartItem && cartItem.quantity >= cartItem.stock) {
-        router.push("/Payment");
+        router.push("/payment");
       } else {
         const quantityToAdd = cartItem ? cartItem.quantity + 1 : 1; // Verifica si cartItem es null o undefined
         addProductCart(session.user.user_id, id_producto, quantityToAdd);
-        router.push("/Payment");
+        router.push("/payment");
       }
     } else {
       router.push("/SignIn");

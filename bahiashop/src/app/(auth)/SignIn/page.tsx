@@ -1,34 +1,34 @@
-"use client"
+"use client";
 
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const defaultTheme = createTheme();
-const backgroundImage = '/Signin.webp';
+const backgroundImage = "/Signin.webp";
 
 export default function SignInSide() {
   const router = useRouter();
   const [formErrors, setFormErrors] = React.useState({
-    email: '',
-    password: '',
-    credentialsError: '', // Nuevo campo de error para credenciales incorrectas
+    email: "",
+    password: "",
+    credentialsError: "", // Nuevo campo de error para credenciales incorrectas
   });
 
   const initialFormData = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   };
   const [formData, setFormData] = React.useState(initialFormData);
 
@@ -36,8 +36,8 @@ export default function SignInSide() {
     const { name, value } = e.target;
     setFormErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: value.trim() ? '' : `Por favor, ingrese su ${name}.`,
-      credentialsError: '', // Limpiar el error de credenciales al cambiar cualquier campo
+      [name]: value.trim() ? "" : `Por favor, ingrese su ${name}.`,
+      credentialsError: "", // Limpiar el error de credenciales al cambiar cualquier campo
     }));
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
@@ -47,18 +47,18 @@ export default function SignInSide() {
 
     // Validación de campos
     let valid = true;
-    const newErrors = { email: '', password: '', credentialsError: '' };
+    const newErrors = { email: "", password: "", credentialsError: "" };
     if (!formData.email) {
-      newErrors.email = 'Por favor, ingrese su correo electrónico.';
+      newErrors.email = "Por favor, ingrese su correo electrónico.";
       valid = false;
     }
     if (!formData.password) {
-      newErrors.password = 'Por favor, ingrese su contraseña.';
+      newErrors.password = "Por favor, ingrese su contraseña.";
       valid = false;
     }
 
     if (valid) {
-      const response = await signIn('credentials', {
+      const response = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
         redirect: false,
@@ -66,13 +66,13 @@ export default function SignInSide() {
 
       console.log({ response });
       if (!response?.error) {
-        router.push('/');
+        router.push("/");
         router.refresh();
       } else {
         // Marcar error de credenciales incorrectas
         setFormErrors((prevErrors) => ({
           ...prevErrors,
-          credentialsError: 'Nombre de usuario o contraseña incorrectos.',
+          credentialsError: "Nombre de usuario o contraseña incorrectos.",
         }));
         setFormData(initialFormData); // Vaciar los campos del formulario
       }
@@ -83,7 +83,7 @@ export default function SignInSide() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -93,9 +93,11 @@ export default function SignInSide() {
           sx={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -103,18 +105,23 @@ export default function SignInSide() {
             sx={{
               my: 8,
               mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Iniciar Sesión
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin="normal"
                 required

@@ -1,12 +1,11 @@
-import React, {ReactNode, useContext} from "react";
+import React, { ReactNode, useContext } from "react";
 
 interface MPProviderProps {
   getPreferenceId: (items: any[]) => Promise<any>;
 }
 
 const MPContext = React.createContext<MPProviderProps | undefined>(undefined);
-const MPProvider = ({children} : {children: ReactNode }) => {
-  
+const MPProvider = ({ children }: { children: ReactNode }) => {
   const getPreferenceId = async (items: any[]) => {
     try {
       const response = await fetch(
@@ -17,7 +16,7 @@ const MPProvider = ({children} : {children: ReactNode }) => {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             items: items,
@@ -25,7 +24,7 @@ const MPProvider = ({children} : {children: ReactNode }) => {
               success: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment/success`,
               pending: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment/pending`,
               failure: `${process.env.NEXT_PUBLIC_PAGE_URL}/payment/failure`,
-            }
+            },
           }),
         }
       );
@@ -37,17 +36,17 @@ const MPProvider = ({children} : {children: ReactNode }) => {
       console.error("Error:", error);
     }
   };
-  
+
   return (
     <MPContext.Provider
       value={{
-        getPreferenceId
+        getPreferenceId,
       }}
     >
       {children}
     </MPContext.Provider>
   );
-}
+};
 
 export const usePaymentContext = () => {
   const context = useContext(MPContext);
