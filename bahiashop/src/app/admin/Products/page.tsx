@@ -40,6 +40,8 @@ const AdminProductPanel = () => {
   });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
   const router = useRouter();
 
   useEffect(() => {
@@ -60,6 +62,22 @@ const AdminProductPanel = () => {
         .includes(searchTerm.toLowerCase())
   );
 
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Volver a la página 1 cuando se busca
+  };
+
   const navigateToAdmin = () => {
     router.push("/admin");
   };
@@ -72,19 +90,16 @@ const AdminProductPanel = () => {
     const { name, value } = event.target;
 
     if (name === "productPrice" && parseFloat(value) < 0) {
-      // Establecer el valor del precio en 0
       setFormData((prevData) => ({
         ...prevData,
         productPrice: "0",
       }));
     } else if (name === "productStock" && parseFloat(value) < 0) {
-      // Establecer el valor del stock en 0
       setFormData((prevData) => ({
         ...prevData,
         productStock: "0",
       }));
     } else {
-      // En cualquier otro caso, actualizar el estado normalmente
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
@@ -116,7 +131,6 @@ const AdminProductPanel = () => {
         },
       });
 
-      // Clear form data after creating the product
       setFormData({
         productName: "",
         productDetails: "",
@@ -173,7 +187,6 @@ const AdminProductPanel = () => {
 
       await updateProduct(updatedProduct.id, updatedProduct);
       setEditProductModal(false);
-      // Clear form data after creating the product
       setFormData({
         productName: "",
         productDetails: "",
@@ -251,14 +264,14 @@ const AdminProductPanel = () => {
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
-                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.817A6 6 0 012 8z"
                     />
                   </svg>
                 </div>
                 <input
                   type="text"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
                   placeholder="Buscar Producto"
                   className="w-full p-2 pl-10 border border-gray-300 rounded"
                 />
@@ -312,7 +325,7 @@ const AdminProductPanel = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <tr
                       key={product.id}
                       className="border-b dark:border-gray-700"
@@ -323,7 +336,6 @@ const AdminProductPanel = () => {
                           height={50}
                           src={product.image_path}
                           alt={"Product Image"}
-                          // className="h-8 w-auto mr-3"
                           className="mr-3"
                         />
                         {product.name}
@@ -375,6 +387,21 @@ const AdminProductPanel = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="flex justify-center items-center p-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`mx-1 ${
+                    currentPage === index + 1
+                      ? "bg-primary-500 text-white"
+                      : "bg-gray-200 text-blue-400"
+                  }`}
+                >
+                  {index + 1}
+                </Button>
+              ))}
             </div>
           </div>
         </div>

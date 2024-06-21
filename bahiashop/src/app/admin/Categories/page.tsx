@@ -7,20 +7,30 @@ import { useEffect, useState } from "react";
 import { Button, Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
 import { isAdmin } from "@/lib/utils";
 import NotFound from "@/app/not-found";
 
 const AdminCategoriesPanel = () => {
-  const { categories, getCategories, createCategory, updateCategory, deleteCategory } = useGlobalContext();
+  const {
+    categories,
+    getCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+  } = useGlobalContext();
   const [addCategoriesModal, setAddCategoriesModal] = useState(false);
   const [editCategoriesModal, setEditCategoriesModal] = useState(false);
   const [deleteCategoriesModal, setDeleteCategoriesModal] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  );
   const [categoryName, setCategoryName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
   const router = useRouter();
   const { data: session } = useSession();
   const [admin, setAdmin] = useState<boolean>(false);
@@ -38,6 +48,17 @@ const AdminCategoriesPanel = () => {
     category.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const paginatedCategories = filteredCategories.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const navigateToAdmin = () => {
     router.push("/admin");
   };
@@ -46,14 +67,14 @@ const AdminCategoriesPanel = () => {
     await createCategory(categoryName);
     setAddCategoriesModal(false);
     setCategoryName("");
-    toast.success(`Se creo la categoria ${categoryName} exitosamente!`, {
-      position: 'top-right',
+    toast.success(`Se creó la categoría ${categoryName} exitosamente!`, {
+      position: "top-right",
       style: {
-        width: '300px',
-        fontSize: '1rem', 
+        width: "300px",
+        fontSize: "1rem",
       },
     });
-  }
+  };
 
   const handleEditCategory = async () => {
     if (selectedCategory) {
@@ -61,11 +82,11 @@ const AdminCategoriesPanel = () => {
       setEditCategoriesModal(false);
       setCategoryName("");
       setSelectedCategory(null);
-      toast.success(`Se edito la categoria exitosamente!`, {
-        position: 'top-right',
+      toast.success(`Se editó la categoría exitosamente!`, {
+        position: "top-right",
         style: {
-          width: '300px',
-          fontSize: '1rem', 
+          width: "300px",
+          fontSize: "1rem",
         },
       });
     }
@@ -76,11 +97,11 @@ const AdminCategoriesPanel = () => {
       await deleteCategory(selectedCategory.id);
       setDeleteCategoriesModal(false);
       setSelectedCategory(null);
-      toast.success(`Se elimino la categoria exitosamente!`, {
-        position: 'top-right',
+      toast.success(`Se eliminó la categoría exitosamente!`, {
+        position: "top-right",
         style: {
-          width: '300px',
-          fontSize: '1rem', 
+          width: "300px",
+          fontSize: "1rem",
         },
       });
     }
@@ -104,15 +125,18 @@ const AdminCategoriesPanel = () => {
                     <path
                       fillRule="evenodd"
                       clipRule="evenodd"
-                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.817A6 6 0 012 8z"
                     />
                   </svg>
                 </div>
                 <input
                   type="text"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Buscar Categoria"
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Volver a la página 1 cuando se busca
+                  }}
+                  placeholder="Buscar Categoría"
                   className="w-full p-2 pl-10 border border-gray-300 rounded"
                 />
               </div>
@@ -135,7 +159,7 @@ const AdminCategoriesPanel = () => {
                       d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                     />
                   </svg>
-                  Agregar Categoria
+                  Agregar Categoría
                 </button>
                 <button
                   type="button"
@@ -151,12 +175,12 @@ const AdminCategoriesPanel = () => {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="p-4">
-                      Categoria
+                      Categoría
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredCategories.map((category) => (
+                  {paginatedCategories.map((category) => (
                     <tr
                       key={category.id}
                       className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -187,7 +211,6 @@ const AdminCategoriesPanel = () => {
                             }}
                             className="flex items-center justify-center text-red-600 bg-red-100 hover:bg-red-200 focus:ring-4 focus:ring-red-300 border border-red-300 rounded-lg text-sm font-medium px-4 py-2"
                           >
-                            {/* Agregar el icono de eliminar */}
                             <FaRegTrashAlt className="mr-2" />
                             Eliminar
                           </button>
@@ -198,11 +221,29 @@ const AdminCategoriesPanel = () => {
                 </tbody>
               </table>
             </div>
+            <div className="flex justify-center items-center p-4">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`mx-1 ${
+                    currentPage === index + 1
+                      ? "bg-primary-500 text-white"
+                      : "bg-gray-200 text-blue-400"
+                  }`}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <Modal show={addCategoriesModal} onClose={() => setAddCategoriesModal(false)}>
+      <Modal
+        show={addCategoriesModal}
+        onClose={() => setAddCategoriesModal(false)}
+      >
         <Modal.Header>Agregar Categoria</Modal.Header>
         <Modal.Body>
           <input
@@ -221,12 +262,17 @@ const AdminCategoriesPanel = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={editCategoriesModal} onClose={() => setEditCategoriesModal(false)}>
+      <Modal
+        show={editCategoriesModal}
+        onClose={() => setEditCategoriesModal(false)}
+      >
         <Modal.Header>Editar Categoria</Modal.Header>
         <Modal.Body>
           <input
             type="text"
-            value={categoryName || (selectedCategory ? selectedCategory.nombre : '')}
+            value={
+              categoryName || (selectedCategory ? selectedCategory.nombre : "")
+            }
             onChange={(e) => setCategoryName(e.target.value)}
             placeholder="Nombre de la categoria"
             className="w-full p-2 border border-gray-300 rounded"
@@ -257,7 +303,10 @@ const AdminCategoriesPanel = () => {
               <Button color="failure" onClick={handleDeleteCategory}>
                 {"Si, Estoy seguro"}
               </Button>
-              <Button color="gray" onClick={() => setDeleteCategoriesModal(false)}>
+              <Button
+                color="gray"
+                onClick={() => setDeleteCategoriesModal(false)}
+              >
                 No, cancelar
               </Button>
             </div>

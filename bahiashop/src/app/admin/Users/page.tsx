@@ -20,6 +20,8 @@ const AdminUserPanel = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 7;
   const router = useRouter();
   const { data: session } = useSession();
   const [admin, setAdmin] = useState<boolean>(false);
@@ -41,13 +43,24 @@ const AdminUserPanel = () => {
       user.rol.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const handleEditUser = async () => {
     if (selectedUser) {
       await updateUser({ ...selectedUser, rol: userRole });
       setEditUserModal(false);
       setUserRole("");
       toast.success(
-        `Se cambio el rol del usuario ${selectedUser.nombre} exitosamente!`,
+        `Se cambió el rol del usuario ${selectedUser.nombre} exitosamente!`,
         {
           position: "top-right",
           style: {
@@ -68,7 +81,7 @@ const AdminUserPanel = () => {
       setEditUserModal(false);
       setUserRole("");
       toast.success(
-        `Se elimino el usuario ${selectedUser.nombre} exitosamente!`,
+        `Se eliminó el usuario ${selectedUser.nombre} exitosamente!`,
         {
           position: "top-right",
           style: {
@@ -89,16 +102,16 @@ const AdminUserPanel = () => {
       <section className="dark:bg-gray-900 p-4 sm:p-5 antialiased">
         <div className="flex flex-col md:flex-row items-stretch md:items-center md:space-x-3 space-y-3 md:space-y-0 justify-between mx-4 py-4 border-t dark:border-gray-700">
           <div className="w-full md:w-1/2 relative">
-            {" "}
-            {/* Cambio en la clase aquí */}
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <HiSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" />{" "}
-              {/* Agregar el icono HiSearch */}
+              <HiSearch className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             </div>
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
               placeholder="Buscar Usuario"
               className="w-full p-2 pl-10 border border-gray-300 rounded"
             />
@@ -132,7 +145,7 @@ const AdminUserPanel = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {paginatedUsers.map((user) => (
                 <tr
                   key={user.user_id}
                   className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -155,7 +168,7 @@ const AdminUserPanel = () => {
                         type="button"
                         onClick={() => {
                           setSelectedUser(user);
-                          setUserRole(user.rol); // Set the current role
+                          setUserRole(user.rol);
                           setEditUserModal(true);
                         }}
                         className="flex items-center justify-center text-green-600 bg-green-100 hover:bg-green-200 focus:ring-4 focus:ring-green-300 border border-green-300 rounded-lg text-sm font-medium px-4 py-2"
@@ -180,6 +193,21 @@ const AdminUserPanel = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-center items-center p-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`mx-1 ${
+                currentPage === index + 1
+                  ? "bg-primary-700 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              {index + 1}
+            </Button>
+          ))}
         </div>
       </section>
 
