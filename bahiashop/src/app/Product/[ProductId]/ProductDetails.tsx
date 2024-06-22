@@ -47,7 +47,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
   const handleBuyNow = (id: string) => {
     if (session && session.user && session.user.user_id) {
       addProductCart(session.user.user_id, id, quantity);
-      router.push("/Payment");
+      router.push("/payment");
       console.log(`Comprando producto: ${id}`);
     } else {
       router.push("/SignIn");
