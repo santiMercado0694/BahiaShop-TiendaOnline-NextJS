@@ -9,6 +9,7 @@ import { CldImage } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Loader from "react-loader-spinner";
+import { ToastContainer } from "react-toastify";
 
 const Payment = () => {
   const { cart } = useGlobalContext();
@@ -21,7 +22,7 @@ const Payment = () => {
   const [lastName, setLastName] = useState("");
   const [address, setAddress] = useState("");
   const [province, setProvince] = useState("");
-  
+
   const [loading, setLoading] = useState(true);
 
   const [errors, setErrors] = useState({
@@ -86,21 +87,21 @@ const Payment = () => {
       }
     };
 
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        if (!session || cart.length < 1) {
-          router.push("/");
-        } else {
-          setLoading(false)
-          setFirstName(session.user.nombre ?? "");
-          setLastName(session.user.apellido ?? "");
-          setEmail(session.user.email ?? "");
-        }
-      }, 1000); 
-    
-      return () => clearTimeout(timer);
-    }, [session, cart.length, router]);
-    
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!session || cart.length < 1) {
+        router.push("/");
+      } else {
+        setLoading(false);
+        setFirstName(session.user.nombre ?? "");
+        setLastName(session.user.apellido ?? "");
+        setEmail(session.user.email ?? "");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [session, cart.length, router]);
+
   if (loading) {
     return (
       <MaxWidthWrapper>
@@ -115,11 +116,12 @@ const Payment = () => {
         </div>
       </MaxWidthWrapper>
     );
-  };
+  }
 
   return (
     <MPProvider>
       <MaxWidthWrapper>
+        <ToastContainer />
         <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
           <div className="px-4 pt-8">
             <p className="text-xl font-medium">Resumen de Compra</p>

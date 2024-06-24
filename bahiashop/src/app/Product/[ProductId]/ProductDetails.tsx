@@ -3,7 +3,7 @@ import { Product } from "@/context/StoreProvider";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdAddShoppingCart } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { Session } from "next-auth"; // Importa el tipo Session
+import { Session } from "next-auth"; 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CldImage } from "next-cloudinary";
