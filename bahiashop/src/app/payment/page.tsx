@@ -89,7 +89,8 @@ const Payment = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!session || cart.length < 1) {
+      const hasOutOfStockItems = cart.some((item) => item.stock === 0);
+      if (!session || cart.length < 1 || hasOutOfStockItems) {
         router.push("/");
       } else {
         setLoading(false);

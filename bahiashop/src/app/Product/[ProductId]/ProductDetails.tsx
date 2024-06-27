@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Product } from "@/context/StoreProvider";
+import { Cart, Product } from "@/context/StoreProvider";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdAddShoppingCart } from "react-icons/md";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import { CldImage } from "next-cloudinary";
 
 interface ProductDetailsProps {
   product: Product;
+  cart: Cart[];
   addProductCart: (
     user_id: string,
     id_producto: string,
@@ -22,6 +23,7 @@ const Horizontal = () => <hr className="w-[30%] my-2" />;
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({
   product,
+  cart,
   addProductCart,
   session, 
 }) => {
@@ -46,13 +48,27 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
   const handleBuyNow = (id: string) => {
     if (session && session.user && session.user.user_id) {
-      addProductCart(session.user.user_id, id, quantity);
-      router.push("/payment");
-      console.log(`Comprando producto: ${id}`);
+      
+      const outOfStockItem = cart.find((item) => item.stock === 0);
+  
+      if (outOfStockItem) {
+        toast.error("¡Hay productos sin stock en el carrito!", {
+          position: "top-left",
+          style: {
+            width: "300px",
+            fontSize: "1rem",
+          },
+        });
+      } else {
+        addProductCart(session.user.user_id, id, 1); // Assuming quantity is 1 here, adjust if needed
+        router.push("/payment");
+        console.log(`Comprando producto: ${id}`);
+      }
     } else {
       router.push("/SignIn");
     }
   };
+  
 
   const incrementQuantity = () => {
     if (quantity < product.stock) {

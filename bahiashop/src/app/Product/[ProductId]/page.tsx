@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { useGlobalContext, Product } from "@/context/StoreProvider";
+import { useGlobalContext, Product, Cart } from "@/context/StoreProvider";
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
 import ProductDetails from "./ProductDetails";
 import { useParams } from "next/navigation";
@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import NotFound from "@/app/not-found";
 
 const Producto = () => {
-  const { getProductById, loading, addProductCart } = useGlobalContext();
+  const { getProductById, loading, addProductCart, cart } = useGlobalContext();
   const [product, setProduct] = useState<Product | null>(null);
   const { ProductId } = useParams<{ ProductId: string }>();
   const [load, setLoad] = useState(true);
@@ -58,6 +58,7 @@ const Producto = () => {
         <div>
           <ProductDetails
             product={product}
+            cart={cart}
             addProductCart={addProductCart}
             session={session}
           />
