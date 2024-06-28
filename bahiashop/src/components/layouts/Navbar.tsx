@@ -11,8 +11,10 @@ import { isAdmin } from "@/lib/utils";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
+import { useGlobalContext } from "@/context/StoreProvider";
 
 const Navbar = () => {
+  const { setSearch } = useGlobalContext();
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -26,6 +28,7 @@ const Navbar = () => {
   // Función para manejar el cierre de sesión
   const handleSignOut = async () => {
     await signOut({ redirect: false });
+    setSearch("");
     router.push("/");
   };
 

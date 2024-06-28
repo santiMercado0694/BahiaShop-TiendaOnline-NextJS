@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import NotFound from "@/app/not-found";
 
 const Producto = () => {
-  const { getProductById, loading, addProductCart, cart } = useGlobalContext();
+  const { getProductById, loading, addProductCart, cart, setSearch } = useGlobalContext();
   const [product, setProduct] = useState<Product | null>(null);
   const { ProductId } = useParams<{ ProductId: string }>();
   const [load, setLoad] = useState(true);
@@ -32,6 +32,7 @@ const Producto = () => {
       try {
         const fetchedProduct = await getProductById(ProductId);
         setProduct(fetchedProduct);
+        setSearch("");
       } catch (error) {
         console.error("Error al obtener el producto:", error);
       }

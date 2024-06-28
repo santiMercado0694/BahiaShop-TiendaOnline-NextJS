@@ -12,7 +12,7 @@ import Loader from "react-loader-spinner";
 import { ToastContainer } from "react-toastify";
 
 const Payment = () => {
-  const { cart } = useGlobalContext();
+  const { cart, setSearch } = useGlobalContext();
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -89,6 +89,7 @@ const Payment = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      setSearch("");
       const hasOutOfStockItems = cart.some((item) => item.stock === 0);
       if (!session || cart.length < 1 || hasOutOfStockItems) {
         router.push("/");
