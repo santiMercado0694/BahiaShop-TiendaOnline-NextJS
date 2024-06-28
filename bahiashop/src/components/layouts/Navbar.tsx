@@ -8,10 +8,10 @@ import Cart from "../cart/Cart";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { isAdmin } from "@/lib/utils";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import { useGlobalContext } from "@/context/StoreProvider";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { setSearch } = useGlobalContext();
@@ -29,6 +29,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     setSearch("");
+    toast.success("Has cerrado sesión con éxito.");
     router.push("/");
   };
 

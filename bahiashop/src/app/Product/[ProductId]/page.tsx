@@ -7,7 +7,6 @@ import { useGlobalContext, Product, Cart } from "@/context/StoreProvider";
 import MaxWidthWrapper from "@/components/layouts/MaxWidthWrapper";
 import ProductDetails from "./ProductDetails";
 import { useParams } from "next/navigation";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSession } from "next-auth/react";
 import NotFound from "@/app/not-found";
@@ -63,7 +62,6 @@ const Producto = () => {
             addProductCart={addProductCart}
             session={session}
           />
-          <ToastContainer />
         </div>
       ) : (
         <NotFound />
