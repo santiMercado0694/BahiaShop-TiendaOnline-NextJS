@@ -1,1 +1,2 @@
-# Mercado-Gonzalez-proyecto-nextjs
+# BahiaShop-TiendaOnline-NextJS
+
